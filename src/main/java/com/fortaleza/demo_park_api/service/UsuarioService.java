@@ -1,0 +1,41 @@
+package com.fortaleza.demo_park_api.service;
+
+import com.fortaleza.demo_park_api.entity.Usuario;
+import com.fortaleza.demo_park_api.repository.UsuarioRepository;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Service
+public class UsuarioService {
+
+    private final UsuarioRepository usuarioRepository;
+
+    @Transactional
+    public Usuario salvar(Usuario usuario){
+       return usuarioRepository.save(usuario);
+    }
+
+    @Transactional(readOnly = true)
+    public Usuario buscarPorId(Long id){
+        return usuarioRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
+    }
+
+    @Transactional
+    public Usuario editarSenha(Long id, String password){
+      Usuario user = buscarPorId(id);
+      user.setPassword(password);
+        return user;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Usuario> bucarTodos(){
+        return usuarioRepository.findAll();
+    }
+}
